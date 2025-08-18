@@ -32,7 +32,7 @@ This code implements a remote control system for the SoBot, using a Logitech con
      📂 lib_arm                →  Libs needed from arm.
      📂 imgs                   →  Images for the repo.
      📂 sounds                 →  Sound assets for tasks.
-     📘 _SmartManipulation.py  →  Main Code ✅
+     📘 Smart_Manipulation.py  →  Main Code ✅
      📘 aux_functions.py       →  Auxiliary Funcitions. 
      📘 read_gamepead.py       →  Functions to read gamepad.
      📘 read_line.py           →  Functions to read line.
@@ -60,4 +60,5 @@ contato@solistecnologia.com.br
 
 
 ![](imgs/logo.png)
+
 
