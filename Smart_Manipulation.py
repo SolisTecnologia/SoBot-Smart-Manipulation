@@ -1,13 +1,11 @@
 """
 Solis Robot - SoBot
 
-SmartManipulation.py: Programming example to control the SoBot
-using a Logitech F710 controller, enabling the robot to follow 
-a line and manipulate objects with its robotic arm integrated 
-with computer vision.
+MultiProg.py: Programming example to control the "SoBot"
+using the Logitech F710 controller once Raspberry is turned on.
 
 Created By   : Vinicius M. Kawakami and Rodrigo L. de Carvalho
-Version      : 1.0
+Version      : 2.0
 
 Company: Solis Tecnologia
 """
@@ -73,7 +71,7 @@ if __name__ == '__main__':
     #usb.write(b"PG SO2,3 CA3,22 DF6,11 RI-6")
 
     # Configure operating parametres in continuous mode
-    usb.write(b"MT0 MC MD0 AT100 DT100 V8")
+    usb.write(b"MT0 MC MD0 AT100 DT100 V10")
 
     usb.write(b"LT E1 RD0 GR100 BL0")   # Turn on Led Tap
 

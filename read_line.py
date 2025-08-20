@@ -32,7 +32,9 @@ Function created to read the line sensor
 '''
 def Read_Line(ev_read_line, usb, read_serial_th, commands_queue, wait):
 
-    rodei = 0
+    times_exec = 0
+
+    invert = False
     once_read_line = False
     black = 49
     white = 48
@@ -53,12 +55,13 @@ def Read_Line(ev_read_line, usb, read_serial_th, commands_queue, wait):
 
         if ev_read_line.is_set():
             if once_read_line == False:
+                invert = False
                 once_read_line = True
                 flag_forward = 0
                 flag_left = 0
                 flag_right = 0
-                state = 2
-                usb.write(b"MT0 MC MD1 RI20 AT50 DT50 V5")
+                state = 0
+                usb.write(b"MT0 MC MD1 RI160 AT100 DT100 V10")
                 pygame.mixer.music.load(selected_music2)
                 pygame.mixer.music.play()
                 while pygame.mixer.music.get_busy():
@@ -86,7 +89,6 @@ def Read_Line(ev_read_line, usb, read_serial_th, commands_queue, wait):
                         flag_left = 0
                         flag_right = 0
                         count_bl = 0
-                        usb.write(b"MT0 MC MD1 RI20 AT50 DT50 V5")
                         usb.write(b"LT E1 RD20 GR70 BL30")
                         usb.write(b"MT0 MF")    # Moving to forward
                         sleep(0.1)# Wait to return datas
@@ -131,6 +133,7 @@ def Read_Line(ev_read_line, usb, read_serial_th, commands_queue, wait):
                     usb.write(b"MT0 ME0")               # Disables wheel motors on mode continuous
 
                  
+           
             # DIGITAL INPUT READING
             read_serial_th.set()
             usb.write(b"DI0")
@@ -144,24 +147,34 @@ def Read_Line(ev_read_line, usb, read_serial_th, commands_queue, wait):
                     flag_forward = 0
                     flag_left = 0
                     flag_right = 0
+                    
+                    sleep(0.2)   
 
                     if state == 0:
                         print("EXECUTING SECTION 1")
                         state = 1
                         usb.write(b"MT0 MP")
-                        usb.write(b"MT0 D89 L AT200 DT200 V10")
+
+                        usb.write(b"MT0 D25 AT200 DT200 V10")
+                        
+                        if(invert):
+                            usb.write(b"MT0 D89 R AT200 DT200 V10")
+                        else:
+                            usb.write(b"MT0 D89 L AT200 DT200 V10")
+                        
                         usb.write(b"MT0 D300 AT200 DT200 V10")
                         dType.SetHOMECmd(api_arm, temp = 0, isQueued = 1)       # Command to go to home position
                         WaitSobot(wait, usb, read_serial_th)
 
 
-                        x_arm, y_arm = get_arm_coord_from_camera()
+                        x_arm, y_arm, _ = get_arm_coord_from_camera()
 
+                        MagicianIndex = dType.SetPTPCmd(api_arm, 2, x_arm, y_arm, 150, 0, isQueued = 1)[0]
                         MagicianIndex = dType.SetEndEffectorSuctionCup(api_arm, True,  True, isQueued=1)
 
-                        MagicianIndex = dType.SetPTPCmd(api_arm, 1, x_arm, y_arm, 150, 0, isQueued = 1)[0]
-                        MagicianIndex = dType.SetPTPCmd(api_arm, 1, x_arm, y_arm, 53, 0, isQueued = 1)[0]
-                        MagicianIndex = dType.SetPTPCmd(api_arm, 1, x_arm, y_arm, 150, 0, isQueued = 1)[0]
+                        MagicianIndex = dType.SetPTPCmd(api_arm, 2, x_arm, y_arm, 55, 0, isQueued = 1)[0]
+
+                        MagicianIndex = dType.SetPTPCmd(api_arm, 2, x_arm, y_arm, 150, 0, isQueued = 1)[0]
 
 
                         while MagicianIndex > dType.GetQueuedCmdCurrentIndex(api_arm)[0]:
@@ -169,11 +182,14 @@ def Read_Line(ev_read_line, usb, read_serial_th, commands_queue, wait):
                 
                         
                         usb.write(b"MT0 D-300 AT200 DT200 V10")
-                        usb.write(b"MT0 D88 R AT200 DT200 V10")
+                        if(invert):
+                            usb.write(b"MT0 D89 L AT200 DT200 V10")
+                        else:
+                            usb.write(b"MT0 D91 R AT200 DT200 V10")
                         usb.write(b"MT0 D30 AT200 DT200 V10")
 
                         dType.dSleep(1000)
-                        MagicianIndex = dType.SetPTPCmd(api_arm, 2, 255, -30, 60, 0, isQueued = 1)[0]
+                        MagicianIndex = dType.SetPTPCmd(api_arm, 2, 195, 0, 44, 0, isQueued = 1)[0]
                         
                         WaitSobot(wait, usb, read_serial_th)
                         
@@ -185,30 +201,56 @@ def Read_Line(ev_read_line, usb, read_serial_th, commands_queue, wait):
                         state = 2
 
                         usb.write(b"MT0 MP")
-                        usb.write(b"MT0 D88 L AT200 DT200 V10")
+                        usb.write(b"MT0 D10 AT200 DT200 V10")
+
+                        if(invert):
+                            usb.write(b"MT0 D89 R AT200 DT200 V10")
+                        else:
+                            usb.write(b"MT0 D89 L AT200 DT200 V10")
+
+                        MagicianIndex = dType.SetPTPCmd(api_arm, 2, 275, -15, 90, 0, isQueued = 1)[0]
                         usb.write(b"MT0 D300 AT200 DT200 V10")
                         WaitSobot(wait, usb, read_serial_th)
-                        MagicianIndex = dType.SetPTPCmd(api_arm, 1, 255, -30, 42, 0, isQueued = 1)[0]
+                        
+                        MagicianIndex = dType.SetPTPCmd(api_arm, 2, 275, -15, 55, 0, isQueued = 1)[0]
                         MagicianIndex = dType.SetEndEffectorSuctionCup(api_arm, False,  False, isQueued=1)[0]
-                        MagicianIndex = dType.SetPTPCmd(api_arm, 2, 255, 0, 150, 0, isQueued = 1)[0]
+                        MagicianIndex = dType.SetPTPCmd(api_arm, 2, 275, -15, 150, 0, isQueued = 1)[0]
                         
                         while MagicianIndex > dType.GetQueuedCmdCurrentIndex(api_arm)[0]:
                             sleep(0.25)
 
                 
                         usb.write(b"MT0 D-300 AT200 DT200 V10")
-                        usb.write(b"MT0 D88 L AT200 DT200 V10")
+                        if(invert):
+                            usb.write(b"MT0 D89 L AT200 DT200 V10")
+                        else:
+                            usb.write(b"MT0 D89 R AT200 DT200 V10")
                         usb.write(b"MT0 D30 AT200 DT200 V10")
+
+                        dType.dSleep(1000)
+                        MagicianIndex = dType.SetPTPCmd(api_arm, 2, 195, 0, 44, 0, isQueued = 1)[0]
+
                         WaitSobot(wait, usb, read_serial_th)
 
 
                     
                     elif state == 2:
                         print("EXECUTING SECTION 3")
-                        state = 0
+                        
+                        state=0
+                        
                         usb.write(b"MT0 MP")
-                        usb.write(b"MT0 D181 R AT200 DT200 V10")
+                        invert = not invert
+                        if(invert):
+                            usb.write(b"MT0 D180 L AT200 DT200 V10")
+                        else:
+                            usb.write(b"MT0 D183 R AT200 DT200 V10")
+                        
+                        times_exec += 1
+                        print(f"Exec {times_exec} times")
                         WaitSobot(wait, usb, read_serial_th)
+
+
 
                             
 

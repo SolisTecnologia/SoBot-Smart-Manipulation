@@ -8,7 +8,7 @@ BTN_START – Enables wheel motors
 BTN_BACK – Enable and Disables line follower mode
 BTN_R1 – Configure curve mode on the same axis
 BTN_L1 – Configure differential curve mode
-BTN_R2 – Sets speed 8cm/s
+BTN_R2 – Sets speed 10cm/s
 BTN_L2 – Sets speed 4cm/s
 BTN_UP – Moves the robot forward
 BTN_DOWN – Moves the robot backwards
@@ -85,7 +85,7 @@ def Read_Gamepad(ev_read_line, usb):
                     if ev_read_line.is_set() == 0 and event.state == 1:
                         print("SELECT button pressed")
                         usb.write(b"LT E1 RD100 GR100 BL100")       # Turn on Led Tap
-                        usb.write(b"MT0 MC MD1 RI20 AT50 DT50 V6")  # Parameter settings for continuous mode
+                        usb.write(b"MT0 MC MD1 RI20 AT50 DT50 V10")  # Parameter settings for continuous mode
                         usb.write(b"MT0 ME1")                       # Enables wheel motors on mode continuous
                         print("LINE FOLLOWER MODE ACTIVATED")
                         ev_read_line.set()
@@ -137,7 +137,7 @@ def Read_Gamepad(ev_read_line, usb):
                         print("RB button pressed")
                         # Configure continuous mode with curve on the same axis
                         if flag_vel:
-                            usb.write(b"MT0 MC MD0 AT100 DT100 V8")
+                            usb.write(b"MT0 MC MD0 AT100 DT100 V10")
                         else:
                             usb.write(b"MT0 MC MD0 AT100 DT100 V4")
 
@@ -146,7 +146,7 @@ def Read_Gamepad(ev_read_line, usb):
                         print("LB button pressed")
                         # Configure continuous mode with differential curve
                         if flag_vel:
-                            usb.write(b"MT0 MC MD1 RI100 AT100 DT100 V8")
+                            usb.write(b"MT0 MC MD1 RI100 AT100 DT100 V10")
                         else:
                             usb.write(b"MT0 MC MD1 RI100 AT100 DT100 V4")
 

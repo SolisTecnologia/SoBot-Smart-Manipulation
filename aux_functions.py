@@ -45,7 +45,7 @@ def get_arm_coord_from_camera():
 
     #Main Loop
     count = 0
-    while count < 100:
+    while count < 15:
         # Captures a video frame
         ret, frame = cap.read()
         
@@ -75,31 +75,33 @@ def get_arm_coord_from_camera():
                 area = cv2.contourArea(cnt)
                 print("Area: ", area)
                 if area > 4000:   #Discard small noise
-                 
-                    # Get square delimiter
-                    x, y, w, h = cv2.boundingRect(cnt)
-                
-                    #Cnetral Point
-                    x_cam_new = x + w // 2
-                    y_cam_new = y + h // 2
 
+                    # Get square delimiter
+                    rect = cv2.minAreaRect(cnt)  
+                    box = cv2.boxPoints(rect)  
+                    box = np.int0(box)
+
+                    #Central Point
+                    (x_cam_new, y_cam_new) = rect[0]
+                    x_cam_new, y_cam_new = int(x_cam_new), int(y_cam_new)
+
+                    (w, h) = rect[1] 
 
                     # Draw frame
-                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                    cv2.drawContours(frame, [box], 0, (0, 255, 0), 2)
                     cv2.circle(frame, (x_cam_new, y_cam_new), 5, (0, 0, 255), -1)
                     
                     # Convert
-                    # 120px == 40cm
-                    # 1px == 3cm
+                    # 120px == 40mm
+                    # 1px == 3mm
                     w_mm = w / (120/40)
 
-                    cv2.putText(frame, str(round(w_mm,2)), (x,y),cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 1)
+                    cv2.putText(frame, str(round(w_mm,2)), (x_cam_new,y_cam_new),cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 1)
 
                     print(f"Count{count} - Pos X:{x_cam_new}  Pos Y:{y_cam_new}")
         
                     count+=1
         
-
 
         # Show Result
         cv2.imshow("Frame", frame)
@@ -112,12 +114,7 @@ def get_arm_coord_from_camera():
     x_arm = x_arm -((y_cam_new-y_base)/3)
 
     print(f"Xarm:{x_arm} Yarm:{y_arm}")
-
-    # Release the camera and close the window
-    cap.release()
-    cv2.destroyAllWindows()
-    return x_arm, y_arm
-
+    return x_arm, y_arm, frame
 
 #Function to find the serial port that the SoBot board is connected to
 def serial_device_finder (name_device):
