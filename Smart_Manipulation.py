@@ -1,8 +1,10 @@
 """
 Solis Robot - SoBot
 
-MultiProg.py: Programming example to control the "SoBot"
-using the Logitech F710 controller once Raspberry is turned on.
+MultiProg.py:  Programming example to control the SoBot
+using a Logitech F710 controller, enabling the robot to follow 
+a line and manipulate objects with its robotic arm integrated 
+with computer vision.
 
 Created By   : Vinicius M. Kawakami and Rodrigo L. de Carvalho
 Version      : 2.0
