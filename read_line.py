@@ -154,7 +154,6 @@ def Read_Line(ev_read_line, usb, read_serial_th, commands_queue, wait):
                         print("EXECUTING SECTION 1")
                         state = 1
                         usb.write(b"MT0 MP")
-
                         usb.write(b"MT0 D25 AT200 DT200 V10")
                         
                         if(invert):
@@ -163,7 +162,9 @@ def Read_Line(ev_read_line, usb, read_serial_th, commands_queue, wait):
                             usb.write(b"MT0 D89 L AT200 DT200 V10")
                         
                         usb.write(b"MT0 D300 AT200 DT200 V10")
+                        
                         dType.SetHOMECmd(api_arm, temp = 0, isQueued = 1)       # Command to go to home position
+                        
                         WaitSobot(wait, usb, read_serial_th)
 
 
@@ -171,9 +172,7 @@ def Read_Line(ev_read_line, usb, read_serial_th, commands_queue, wait):
 
                         MagicianIndex = dType.SetPTPCmd(api_arm, 2, x_arm, y_arm, 150, 0, isQueued = 1)[0]
                         MagicianIndex = dType.SetEndEffectorSuctionCup(api_arm, True,  True, isQueued=1)
-
                         MagicianIndex = dType.SetPTPCmd(api_arm, 2, x_arm, y_arm, 55, 0, isQueued = 1)[0]
-
                         MagicianIndex = dType.SetPTPCmd(api_arm, 2, x_arm, y_arm, 150, 0, isQueued = 1)[0]
 
 

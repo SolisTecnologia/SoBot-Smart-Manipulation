@@ -36,7 +36,7 @@ print("Connect status:",CON_STR[state])
 if (state == DobotConnect.DobotConnect_NoError):
 
     #Set Home
-    SetHOMEParams(api, 250, 0, 100, 0, isQueued = 1) 
+    SetHOMEParams(api, 220, 0, 100, 0, isQueued = 1) 
     SetHOMECmd(api, temp = 0, isQueued = 1)
 
     while True:
