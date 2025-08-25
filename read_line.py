@@ -61,6 +61,7 @@ def Read_Line(ev_read_line, usb, read_serial_th, commands_queue, wait):
                 flag_left = 0
                 flag_right = 0
                 state = 0
+                count_bl = 0
                 usb.write(b"MT0 MC MD1 RI160 AT100 DT100 V10")
                 pygame.mixer.music.load(selected_music2)
                 pygame.mixer.music.play()
