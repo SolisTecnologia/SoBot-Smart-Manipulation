@@ -155,7 +155,7 @@ def WaitSobot(wait, usb, read_serial_th):
 
 def init_sound():
     pygame.mixer.init()
-    start_sound = '/home/pi/Documentos/Projetos/prog_rasp/Multi-Robot/sounds'
+    start_sound = '/home/pi/Documentos/Projetos/Demo/Smart_Manipulation/sounds'
     selected_music1 = os.path.join(start_sound, 'Frase_Start-Sobot.mp3')
     selected_music2 = os.path.join(start_sound, 'SL_Ativado.mp3')
     selected_music3 = os.path.join(start_sound, 'SL_Desativado.mp3')
