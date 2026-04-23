@@ -65,15 +65,15 @@ if __name__ == '__main__':
     sleep(0.1)
 
     # Configure wheel parametres
-    usb.write(b"WP MT1 WD100,05")
-    usb.write(b"WP MT2 WD100,05")
-    usb.write(b"WP DW268,65")
+    usb.write(b"WP MT1 WD100")
+    usb.write(b"WP MT2 WD100")
+    usb.write(b"WP DW268")
 
     # Set the motion proportional gain
     #usb.write(b"PG SO2,3 CA3,22 DF6,11 RI-6")
 
     # Configure operating parametres in continuous mode
-    usb.write(b"MT0 MC MD0 AT100 DT100 V10")
+    usb.write(b"MT0 MC MD0 AT100 DT100 V8")
 
     usb.write(b"LT E1 RD0 GR100 BL0")   # Turn on Led Tap
 

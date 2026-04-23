@@ -24,12 +24,14 @@ def get_arm_coord_from_camera():
     color_low = np.array([17, 80, 177])   # Modify 
     
     #Reference coordinates in pixels 
-    x_base = 267 # Modify 
-    y_base = 243 # Modify 
+    x_base = 341 # Modify 
+    y_base = 313 # Modify 
 
     #Reference coordinates of Arm
-    x_arm = 261 # Modify 
-    y_arm = 4  # Modify 
+    x_arm = 257.1396 # Modify 
+    y_arm = -22.6930  # Modify
+    offset_x_mm = -1 # Modify
+    offset_y_mm = -1 # Modify
 
     # Capture video from camera
     cap = cv2.VideoCapture(0,cv2.CAP_V4L2)
@@ -79,7 +81,7 @@ def get_arm_coord_from_camera():
                     # Get square delimiter
                     rect = cv2.minAreaRect(cnt)  
                     box = cv2.boxPoints(rect)  
-                    box = np.int0(box)
+                    box = np.array(box, dtype=np.int32)
 
                     #Central Point
                     (x_cam_new, y_cam_new) = rect[0]
@@ -91,12 +93,22 @@ def get_arm_coord_from_camera():
                     cv2.drawContours(frame, [box], 0, (0, 255, 0), 2)
                     cv2.circle(frame, (x_cam_new, y_cam_new), 5, (0, 0, 255), -1)
                     
+                    print(f"Pos W: {w}")
+                    print(f"Pos H: {h}")
+                    side_pixels = (w + h) / 2
+                    mm_per_pixel = 40.0 / side_pixels
+                    print(f"mm_per_pixel: {mm_per_pixel}")
+                    w_mm = mm_per_pixel*w
+                    h_mm = mm_per_pixel*h
+                    print(f"w_mm: {w_mm}, h_mm: {h_mm}")
+                    side_mm = (w_mm + h_mm) / 2
+
                     # Convert
                     # 120px == 40mm
                     # 1px == 3mm
-                    w_mm = w / (120/40)
+                    # w_mm = w / (120/40)
 
-                    cv2.putText(frame, str(round(w_mm,2)), (x_cam_new,y_cam_new),cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 1)
+                    cv2.putText(frame, str(round(side_mm,2)), (x_cam_new,y_cam_new),cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 1)
 
                     print(f"Count{count} - Pos X:{x_cam_new}  Pos Y:{y_cam_new}")
         
@@ -110,11 +122,15 @@ def get_arm_coord_from_camera():
     print(f"Pos X: {x_cam_new}")
     print(f"Pos Y: {y_cam_new}")
 
-    y_arm = y_arm - ((x_cam_new-x_base)/3)
-    x_arm = x_arm -((y_cam_new-y_base)/3)
+    # y_arm = y_arm - ((x_cam_new-x_base)/3)
+    # x_arm = x_arm -((y_cam_new-y_base)/3)
 
-    print(f"Xarm:{x_arm} Yarm:{y_arm}")
-    return x_arm, y_arm, frame
+    y_arm_new = y_arm - ((x_cam_new - x_base) * mm_per_pixel) + offset_y_mm
+    x_arm_new = x_arm - ((y_cam_new - y_base) * mm_per_pixel) + offset_x_mm
+
+    print(f"Xarm:{x_arm_new} Yarm:{y_arm_new}")
+    #print(f"Xarm:{x_arm} Yarm:{y_arm}")
+    return x_arm_new, y_arm_new, frame
 
 #Function to find the serial port that the SoBot board is connected to
 def serial_device_finder (name_device):
@@ -155,7 +171,8 @@ def WaitSobot(wait, usb, read_serial_th):
 
 def init_sound():
     pygame.mixer.init()
-    start_sound = '/home/pi/Documentos/Projetos/Demo/Smart_Manipulation/sounds'
+    pasta_sound = os.path.dirname(os.path.abspath(__file__))
+    start_sound = os.path.join(pasta_sound, "sounds")
     selected_music1 = os.path.join(start_sound, 'Frase_Start-Sobot.mp3')
     selected_music2 = os.path.join(start_sound, 'SL_Ativado.mp3')
     selected_music3 = os.path.join(start_sound, 'SL_Desativado.mp3')
