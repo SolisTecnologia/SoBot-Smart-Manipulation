@@ -25,6 +25,19 @@ Several programming languages can be used to connect via API.
 ## [SMART MANIPULATION.py](Smart_Manipulation.py) 
 This code implements a remote control system for the SoBot, using a Logitech controller to perform functions such as movement, speed adjustment, and LED color changes. Communication with the robot is established through a serial interface, enabling the exchange of commands and real-time responses. In addition to manual control, the program integrates line sensors that allow the SoBot to autonomously follow tracks, and upon detecting ground markers, it can perform object manipulation tasks supported by computer vision.
 
+### ⚠️ Important
+
+We recommend **avoiding general library updates** (`pip install --upgrade`).
+
+**Why?**  
+Some libraries (e.g. NumPy) introduce significant changes between versions that can break code that was previously working perfectly.
+
+### ✅ Recommended Best Practice:
+
+- Update **libraries individually**, one at a time:
+  ```bash
+  pip install numpy==2.2.6   # example of a stable version
+
 ### Code Description
 ```
 📂Smart Manipulation
