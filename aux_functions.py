@@ -212,7 +212,7 @@ def Connect_Dobot():
         dType.SetEndEffectorSuctionCup(api, False, True, isQueued=0)     # Disable Suction Command
 
         #Move settings
-        dType.SetHOMEParams(api, 220, 0, 150, 0, isQueued = 1)                # Sets the default position of the Dobot Magicia
+        dType.SetHOMEParams(api, 250, 0, 150, 0, isQueued = 1)                # Sets the default position of the Dobot Magicia
         dType.SetPTPJointParams(api, 80, 80, 80, 80, 80, 80, 80, 80, isQueued = 1)  # Sets the joint parameters
         dType.SetPTPCommonParams(api, 100, 100, isQueued = 1)                       # Defines the velocity ratio and acceleration ratio in PTP mode
         dType.SetPTPCoordinateParams(api, 200, 200, 400, 200, isQueued = 1)         # Set the velocity and acceleration of the Cartesian coordinate axis en PTP mode
